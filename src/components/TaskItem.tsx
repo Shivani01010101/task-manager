@@ -1,5 +1,6 @@
-import { useState } from "react";
-import type { Task } from "../types/task";
+import { useState, type KeyboardEvent } from "react";
+
+import { TaskStatus, type Task } from "../types/task";
 
 interface Props {
   task: Task;
@@ -8,18 +9,26 @@ interface Props {
   onUpdate: (id: string, title: string) => void;
 }
 
+/**
+ * TaskItem component
+ * @param task - task to display
+ * @param onToggle - function to toggle a task
+ * @param onDelete - function to delete a task
+ * @param onUpdate - function to update a task
+ * @returns TaskItem component
+ */
 export const TaskItem = ({ task, onToggle, onDelete, onUpdate }: Props) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(task.title);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editValue, setEditValue] = useState<string>(task.title);
 
-  const handleSave = () => {
+  const handleSave = (): void => {
     onUpdate(task.id, editValue);
     setIsEditing(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") handleSave();
-    if (e.key === "Escape") {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === "Enter") handleSave();
+    if (event.key === "Escape") {
       setEditValue(task.title);
       setIsEditing(false);
     }
@@ -27,29 +36,35 @@ export const TaskItem = ({ task, onToggle, onDelete, onUpdate }: Props) => {
 
   return (
     <div className="task-item">
-      {isEditing ? (
+      <div className="task-content">
         <input
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          autoFocus
+          type="checkbox"
+          checked={task.status === TaskStatus.COMPLETED}
+          onChange={() => onToggle(task.id)}
         />
-      ) : (
-        <span
-          onClick={() => onToggle(task.id)}
-          className={task.status === "completed" ? "completed" : ""}
-        >
-          {task.title}
-        </span>
-      )}
-
+        {isEditing ? (
+          <input
+            value={editValue}
+            onChange={(event) => setEditValue(event.target.value)}
+            onKeyDown={handleKeyDown}
+            autoFocus
+          />
+        ) : (
+          <span
+            className={
+              task.status === TaskStatus.COMPLETED ? TaskStatus.COMPLETED : ""
+            }
+          >
+            {task.title}
+          </span>
+        )}
+      </div>
       <div className="actions">
         {isEditing ? (
           <button onClick={handleSave}>Save</button>
         ) : (
           <button onClick={() => setIsEditing(true)}>Edit</button>
         )}
-
         <button onClick={() => onDelete(task.id)}>Delete</button>
       </div>
     </div>

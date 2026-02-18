@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useState, type SubmitEvent } from "react";
 
 interface Props {
   onAdd: (title: string) => void;
 }
 
+/**
+ * TaskForm component
+ * @param onAdd - function to add a new task
+ * @returns TaskForm component
+ */
 export const TaskForm = ({ onAdd }: Props) => {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
     onAdd(title);
     setTitle("");
   };
@@ -19,7 +24,7 @@ export const TaskForm = ({ onAdd }: Props) => {
         type="text"
         placeholder="Enter task..."
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(event) => setTitle(event.target.value)}
       />
       <button type="submit">Add</button>
     </form>

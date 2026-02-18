@@ -1,4 +1,7 @@
-export type TaskStatus = "pending" | "completed";
+export enum TaskStatus {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+}
 
 export interface Task {
   id: string;
