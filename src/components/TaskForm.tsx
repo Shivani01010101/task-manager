@@ -25,8 +25,11 @@ export const TaskForm = ({ onAdd }: Props) => {
         placeholder="Enter task..."
         value={title}
         onChange={(event) => setTitle(event.target.value)}
+        aria-label="Task title"
       />
-      <button type="submit">Add</button>
+      <button type="submit" aria-label="Add task">
+        Add
+      </button>
     </form>
   );
 };
